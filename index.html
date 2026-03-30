@@ -1,23 +1,572 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Home</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <!--
-      Need a visual blank slate?
-      Remove all code in `styles.css`!
-    -->
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="script.js"></script>
-  </head>
-  <body>
-    <nav>
-      <a href="/" aria-current="page">Home</a>
-      <a href="/page2.html">Other page</a>
-    </nav>
+
+    <!-- JSON-LD 구조화 데이터 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "자동차 렌트 서비스",
+      "provider": {
+        "@type": "Organization",
+        "name": "카플러스 렌트카",
+        "url": "https://yourdomain.com",
+        "logo": "https://yourdomain.com/logo.png"
+      },
+      "areaServed": "대한민국",
+      "description": "2026년 최신 자동차 렌트카 가격 비교 및 추천 가이드. 합리적인 비용으로 안전하게 차량을 대여할 수 있도록 돕습니다.",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "렌트카 대여 상품 목록",
+        "description": "단기, 장기, 월간 렌트카 가격표 및 상품 정보",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "경형/소형차 렌트"
+            },
+            "price": "50000",
+            "priceCurrency": "KRW",
+            "description": "출퇴근, 근거리 이동에 적합한 경제적인 소형차"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "중형차 렌트"
+            },
+            "price": "70000",
+            "priceCurrency": "KRW",
+            "description": "일반적인 업무 및 가족 여행에 적합한 중형차"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "대형/승합차 렌트"
+            },
+            "price": "100000",
+            "priceCurrency": "KRW",
+            "description": "단체 이동이나 짐이 많은 경우에 적합한 대형차 및 승합차"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "장기 렌트 패키지"
+            },
+            "price": "600000",
+            "priceCurrency": "KRW",
+            "description": "월 단위 계약으로 비용 절감 효과가 큰 장기 렌트 상품"
+          }
+        ]
+      },
+      "review": {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "4.8",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "홍길동"
+        },
+        "reviewBody": "만족스러운 가격과 친절한 서비스였습니다."
+      }
+    }
+    </script>
+
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa; /* 부드러운 배경색 */
+            color: #333;
+            line-height: 1.8;
+            word-break: keep-all; /* 한글 텍스트 깨짐 방지 */
+        }
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+        h1, h2, h3, h4 {
+            color: #1a237e; /* 짙은 네이비 */
+            font-weight: 700;
+        }
+        h1 { font-size: 2.5rem; text-align: center; margin-bottom: 1rem; }
+        h2 { font-size: 2rem; border-bottom: 3px solid #e0e7ff; padding-bottom: 0.5rem; margin-top: 2.5rem; }
+        h3 { font-size: 1.5rem; margin-top: 1.5rem; color: #3f51b5; }
+        p { margin-bottom: 1rem; }
+
+        /* 헤더 및 내비게이션 */
+        header {
+            background-color: #2c3e50; /* 짙은 배경색 */
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: sticky; /* Sticky Header */
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        nav a {
+            color: #f9f9f9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffc107; /* 포인트 색상 */
+        }
+
+        /* 섹션별 스타일링 */
+        section {
+            padding: 2rem 1.5rem;
+        }
+        section:nth-child(even) {
+            background-color: #fcfcfc; /* Zebra-striping effect for sections */
+        }
+        .intro-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .intro-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        /* 이미지 및 카드 디자인 */
+        .image-container img {
+            width: 100%;
+            border-radius: 8px;
+            height: auto;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden; /* Prevent border issues with radius */
+        }
+        th, td {
+            padding: 1rem 0.75rem;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        th {
+            background-color: #3f51b5;
+            color: white;
+            font-weight: 700;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* FAQ 아코디언 */
+        dl dt {
+            background-color: #e8f0fe;
+            color: #1a237e;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        dl dt:hover {
+            background-color: #d1e0fc;
+        }
+        dl dt::after {
+            content: "+";
+            position: absolute;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        dl dt.active::after {
+            content: "-";
+            transform: rotate(180deg);
+        }
+        dl dd {
+            margin: 0;
+            padding: 1rem 1.5rem;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            display: none;
+        }
+        dl dt.active + dd {
+            display: block;
+        }
+
+        /* CTA 버튼 */
+        .cta-button {
+            display: block;
+            background-color: #ffc107; /* 포인트 색상 */
+            color: #1a237e;
+            font-weight: 700;
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 2rem auto;
+            width: fit-content;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 1.1rem;
+        }
+        .cta-button:hover {
+            background-color: #ffcd38;
+            transform: translateY(-2px);
+        }
+
+        /* 키워드 태그 */
+        .keyword-tags {
+            margin: 1.5rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .keyword-tags a {
+            background-color: #e0f0ff;
+            color: #1a237e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .keyword-tags a:hover {
+            background-color: #b3d1ff;
+        }
+
+        /* 폼 요소 스타일링 */
+        form {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #3f51b5;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+            color: #777;
+            background-color: #e0e0e0;
+            margin-top: 2rem;
+        }
+
+        /* 외부 링크 강조 */
+        .external-link {
+            font-weight: 600;
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        /* 키워드 강조 */
+        strong {
+            font-weight: 700;
+            color: #1a237e;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>2026년 자동차 렌트카 가격 비교: 합리적인 비용으로 차량 대여하는 방법</h1>
+        <nav>
+            <ul>
+                <li><a href="#intro">서비스 소개</a></li>
+                <li><a href="#price-guide">가격 및 견적</a></li>
+                <li><a href="#comparison">상품 비교</a></li>
+                <li><a href="#faq">자주 묻는 질문</a></li>
+                <li><a href="#reservation">예약 문의</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main>
-      <h1>Home page</h1>
+        <section id="intro">
+            <h2>현명한 렌트카 선택 가이드: 2026년 최신 정보</h2>
+            <div class="intro-container">
+                <div>
+                    <p>안녕하세요. 자동차 렌트카 서비스를 찾고 계신 고객님들을 위한 종합 안내 페이지입니다. 최근 몇 년간 렌트카 시장은 단기 대여부터 장기 계약까지 다양한 형태로 발전해 왔습니다. 2026년 현재, 단순히 차량을 빌리는 것을 넘어 합리적인 <strong>가격</strong>과 맞춤형 혜택을 제공하는 <strong>전문 업체</strong>를 선택하는 것이 중요해졌습니다. 본 가이드는 렌트카 대여 시 고려해야 할 모든 사항을 꼼꼼히 짚어드리고, 고객님의 상황에 맞는 최적의 <strong>자동차 렌트카</strong> 상품을 추천해 드립니다.</p>
+                    <p>특히, 복잡한 <strong>렌트카 비용</strong> 산정 방식과 보험(자차) 가입 여부는 <strong>내돈내산</strong> 고객 후기에서 가장 중요한 요소로 꼽힙니다. 저희는 투명한 <strong>가격</strong> 공개와 <strong>신규 가입 혜택</strong>을 통해 고객님의 부담을 최소화하고자 노력합니다. 지금부터 <strong>장단점</strong> 비교를 통해 어떤 상품이 나에게 맞는지 자세히 알아보겠습니다.</p>
+                </div>
+                <div class="image-container">
+                    <!-- Pexels.com에서 'car rental' 또는 'car keys' 키워드로 검색하여 이미지 대체 -->
+                    <img src="https://images.pexels.com/photos/10351717/pexels-photo-10351717.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="렌트카 키와 계약서를 들고 있는 손">
+                </div>
+            </div>
+            <div class="keyword-tags" aria-label="연관 키워드 태그">
+                <a href="#price-guide">자동차 렌트카 가격</a>
+                <a href="#price-guide">단기 렌트카 비용</a>
+                <a href="#comparison">렌트카 업체 비교</a>
+                <a href="#reservation">렌트카 예약</a>
+                <a href="#comparison">장기 렌트카 장점</a>
+                <a href="#reviews">렌트카 내돈내산 후기</a>
+                <a href="#faq">렌트카 보험</a>
+                <a href="#price-guide">저렴한 렌트카 싼곳</a>
+            </div>
+        </section>
+
+        <section id="price-guide">
+            <h2>합리적인 렌트카 가격 견적 및 비용 분석</h2>
+            <p><strong>자동차 렌트카 비용</strong>은 단순히 일일 <strong>가격</strong>으로만 결정되지 않습니다. 차종, 대여 기간, 보험 종류, <strong>신규 가입 할인</strong> 여부 등 여러 요소가 복합적으로 작용합니다. 2026년 기준 <strong>평균 금액</strong>을 기준으로 대략적인 <strong>예상 비용</strong>을 산출할 수 있으며, <strong>전문 업체</strong>마다 제시하는 <strong>견적</strong>에는 <strong>차이점</strong>이 있습니다. 저희는 투명한 <strong>가격</strong> 정보를 제공하여 고객님이 <strong>저렴한곳</strong>을 찾을 수 있도록 돕습니다.</p>
+
+            <h3>1. 단기 렌트카 가격표 (2026년 기준)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>차종 분류</th>
+                        <th>평균 일일 대여 요금 (KRW)</th>
+                        <th>주요 모델</th>
+                        <th>주요 장점</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>경형/소형차</td>
+                        <td>40,000 ~ 60,000</td>
+                        <td>캐스퍼, 아반떼</td>
+                        <td>연비 효율성, <strong>저렴한 가격</strong>, 좁은 골목 운전에 용이</td>
+                    </tr>
+                    <tr>
+                        <td>중형차/세단</td>
+                        <td>60,000 ~ 90,000</td>
+                        <td>K5, 쏘나타</td>
+                        <td>가장 일반적인 선택, 쾌적한 승차감, 업무용/가족용으로 적합</td>
+                    </tr>
+                    <tr>
+                        <td>SUV/RV</td>
+                        <td>80,000 ~ 120,000</td>
+                        <td>스포티지, 쏘렌토</td>
+                        <td>넓은 공간, 레저 활동에 적합, 안전성 높음</td>
+                    </tr>
+                    <tr>
+                        <td>고급차/수입차</td>
+                        <td>150,000 ~ 300,000+</td>
+                        <td>벤츠 E클래스, BMW 5시리즈</td>
+                        <td>특별한 날 이용, 품격 있는 경험, 프리미엄 서비스 제공</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>주의사항:</strong> 위 <strong>금액</strong>은 성수기, 주말, 명절 연휴 기간에는 크게 상승할 수 있습니다. <strong>할인</strong> 이벤트를 활용하면 <strong>싼곳</strong>을 찾을 수 있으니 <strong>신규 가입 혜택</strong>이나 프로모션을 꼭 확인해 보세요.</p>
+
+            <h3>2. 장기 렌트카 vs. 단기 렌트카 비교 분석</h3>
+            <p>장기 렌트는 1년 이상의 계약 기간 동안 차량을 이용하며, 월 납입료만 지불하면 됩니다. <strong>단점</strong>은 중도 해지 시 위약금이 발생한다는 점이지만, <strong>장점</strong>으로는 초기 비용 부담이 적고, 자동차세 및 보험료 부담이 없다는 점입니다. <strong>장단점</strong>을 고려할 때, <strong>평균</strong>적으로 1년 이상 차량 이용 계획이 있다면 장기 렌트가 훨씬 <strong>저렴한</strong> 선택이 될 수 있습니다. <strong>차이점</strong>을 명확히 이해하고 자신에게 맞는 상품을 선택하는 것이 중요합니다.</p>
+
+        </section>
+
+        <section id="comparison">
+            <h2>렌트카 업체 순위 및 비교 분석: 현명한 선택 기준</h2>
+            <p>국내에는 다양한 <strong>자동차 렌트카 업체</strong>가 존재합니다. 롯데렌터카, SK렌터카, AJ렌터카와 같은 대기업부터 지역 기반의 <strong>전문 업체</strong>까지 선택의 폭이 넓습니다. 고객들은 종종 "<strong>어떤 업체가 싼곳</strong>인가?" 또는 "<strong>어떤 업체가 서비스가 좋은가?</strong>"를 기준으로 <strong>비교</strong>하고 <strong>추천</strong>을 받습니다. 저희가 <strong>내돈내산</strong> 고객 후기를 바탕으로 <strong>순위</strong>를 매겨보았습니다.</p>
+
+            <h3>1. 렌트카 업체 비교: 가격, 서비스, 차량 관리</h3>
+            <table aria-label="렌트카 업체 비교 테이블">
+                <thead>
+                    <tr>
+                        <th>비교 항목</th>
+                        <th>대형 업체 (A사)</th>
+                        <th>지역 전문 업체 (B사)</th>
+                        <th>P2P 플랫폼 (C사)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>가격/비용</strong></td>
+                        <td>표준화된 <strong>가격</strong> 정책, 정기 <strong>할인</strong> 이벤트</td>
+                        <td><strong>저렴한곳</strong>이 많음, 유동적인 <strong>가격</strong></td>
+                        <td>차주에 따라 <strong>비용</strong> 천차만별, <strong>싼곳</strong> 찾기 쉬움</td>
+                    </tr>
+                    <tr>
+                        <td>차량 상태</td>
+                        <td>신차 위주, 체계적인 관리</td>
+                        <td>차량에 따라 편차 큼, <strong>후기</strong> 참고 필수</td>
+                        <td>개인 차량이므로 <strong>장단점</strong>이 극명함</td>
+                    </tr>
+                    <tr>
+                        <td>보험 및 서비스</td>
+                        <td>다양한 보험 옵션 (완전 자차 등), 24시간 긴급 출동 서비스</td>
+                        <td>제한적 보험 옵션, 업체별 <strong>차이점</strong> 존재</td>
+                        <td>보험 가입 조건 까다로움, <strong>장점</strong>이기도 <strong>단점</strong>이기도 함</td>
+                    </tr>
+                    <tr>
+                        <td><strong>신규 가입 혜택</strong></td>
+                        <td>프로모션, <strong>현금 지원 이벤트</strong></td>
+                        <td>없거나 소규모, <strong>상품권</strong> 제공 등</td>
+                        <td><strong>가입</strong> 시 포인트 제공 등</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. 렌트카 선택 시 고려해야 할 요소 (네이버, 구글 검색 트렌드)</h3>
+            <p><strong>네이버</strong>, <strong>구글</strong> 등 포털 사이트에서 고객들이 <strong>함께 많이 찾는 키워드</strong>를 분석해 보면 '<strong>자차 보험 범위</strong>', '<strong>운전 경력 조건</strong>', '<strong>차량 옵션</strong>'이 가장 중요합니다. <strong>내돈내산 후기</strong>를 보면, <strong>저렴한곳</strong>만 찾다가 <strong>자차 보험</strong> 범위가 좁아 예상치 못한 <strong>추가 비용</strong>이 발생하거나, 차량 옵션이 기대 이하여서 실망하는 경우가 많습니다. <strong>비교</strong> 시 <strong>가격</strong> 외에 보험 조건과 차량 상태를 반드시 확인하세요.</p>
+            <p>또한, 최근에는 <strong>AI</strong> 기술이 렌트카 산업에도 적용되어 <strong>Gemini</strong>나 <strong>ChatGPT</strong>와 같은 AI 에이전트가 고객 맞춤형 <strong>추천</strong>을 제공하는 서비스도 등장하고 있습니다. 2026년에는 AI가 <strong>평균</strong>적인 <strong>견적</strong>을 실시간으로 분석하여 <strong>할인</strong> 정보를 제공하는 플랫폼이 주류가 될 것입니다.</p>
+        </section>
+
+        <section id="reviews">
+            <h2>진짜 내돈내산 렌트카 후기 분석 및 렌트 절차 가이드</h2>
+            <p><strong>자동차 렌트카</strong>를 처음 이용하거나 <strong>전문 업체</strong>를 바꾸려는 분들이 가장 궁금해하는 것은 실제 이용자들의 <strong>후기</strong>입니다. <strong>내돈내산</strong> 고객들의 경험을 바탕으로 <strong>장점</strong>과 <strong>단점</strong>을 정리해 드립니다.</p>
+
+            <h3>1. 렌트카 이용자들이 말하는 렌트카 장단점</h3>
+            <ul>
+                <li><strong>장점:</strong>
+                    <ul>
+                        <li>초기 비용 부담 없음: 차량 구매 시 필요한 취득세, 등록세 등 초기 비용이 들지 않습니다.</li>
+                        <li>보험료/세금 부담 해방: 렌트료에 모든 비용이 포함되어 있어 <strong>평균</strong>적인 보험료나 세금을 신경 쓸 필요가 없습니다.</li>
+                        <li>자유로운 차량 변경: 신차를 경험하고 싶거나, 계절에 따라 차량(SUV/세단)을 바꾸고 싶을 때 용이합니다.</li>
+                        <li>사고 처리 간편: 사고 발생 시 <strong>전문 업체</strong>에서 모든 처리를 대행해 주어 편리합니다.</li>
+                    </ul>
+                </li>
+                <li><strong>단점:</strong>
+                    <ul>
+                        <li>장기 렌트카 번호판: '하', '호' 번호판으로 인해 신차 구매 대비 심리적 <strong>단점</strong>이 있습니다.</li>
+                        <li>총 <strong>금액</strong>은 신차 구매 대비 높을 수 있음: 장기간 이용 시 <strong>총 비용</strong>은 할부 구매보다 높을 수 있습니다.</li>
+                        <li>보험 경력 단절: 장기 렌트는 업체 보험을 사용하므로 개인 보험 경력이 단절될 수 있습니다.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>2. 렌트카 계약 절차 (신규 가입 혜택 활용하기)</h3>
+            <p>렌트카 대여는 간단하지만, <strong>신규 가입 혜택</strong>이나 프로모션을 놓치지 않으려면 다음 절차를 따르는 것이 좋습니다.</p>
+            <ol>
+                <li><strong>견적 비교 및 예약:</strong> <strong>네이버</strong>, <strong>구글</strong> 검색을 통해 여러 <strong>전문 업체</strong>의 <strong>가격</strong> 및 <strong>상품</strong>을 <strong>비교</strong>합니다. <strong>신규 가입</strong> 고객에게 <strong>할인</strong>이나 <strong>현금 지원 이벤트</strong>를 제공하는지 확인하세요.</li>
+                <li><strong>운전 조건 확인:</strong> 렌트카 대여 시 운전 경력 1년 이상, 만 21세 이상 등의 <strong>가입</strong> 조건이 있을 수 있습니다. (참조: 경찰청 운전면허 정보 [external-link-1])</li>
+                <li><strong>계약 및 차량 인수:</strong> 계약서를 꼼꼼히 확인하고 차량을 인수합니다. 차량 외관 및 옵션을 꼼꼼히 확인하여 <strong>후기</strong>에 남길 정보를 확보하세요.</li>
+            </ol>
+            <div class="card">
+                <h3>외부 신뢰성 자료 참고 (SEO 최적화)</h3>
+                <p><strong>자동차 렌트카</strong> 시장은 <strong>2026년</strong> 기준으로 <strong>평균</strong> 성장률이 높아지고 있습니다. (참조: 통계청 차량 등록 현황 [external-link-2]). 정확한 <strong>가격</strong>과 <strong>장단점</strong> <strong>차이점</strong>을 파악하려면 공인된 정보를 참고하는 것이 좋습니다. <strong>나무위키</strong> 등 신뢰성 있는 출처에서 렌트카의 역사와 법률 정보를 확인할 수 있습니다. (참조: 나무위키 '렌터카' [external-link-3])</p>
+                <p><strong>소비자 피해 예방:</strong> <strong>저렴한곳</strong>만 찾다가 <strong>단점</strong>을 겪지 않으려면 공정거래위원회에서 제공하는 소비자 보호 정보를 참고하세요. (참조: 공정거래위원회 소비자 분쟁해결기준 [external-link-4]) 렌트카 <strong>전문 업체</strong>와 계약 시 약관을 꼼꼼히 읽어보는 것이 중요합니다.</p>
+            </div>
+        </section>
+
+        <section id="faq">
+            <h2>자주 묻는 질문 (FAQ)</h2>
+            <dl>
+                <dt tabindex="0" aria-expanded="false">렌트카 보험(자차)은 필수인가요?</dt>
+                <dd>의무 보험은 아니지만, 사고 발생 시 <strong>비용</strong> 부담을 줄이기 위해 가입을 <strong>추천</strong>합니다. 보험 종류에 따라 <strong>가격</strong>과 보장 범위에 <strong>차이점</strong>이 있습니다. 완전 자차(면책금 0원)와 일반 자차(면책금 발생) 중 선택할 수 있습니다. <strong>신규 가입 혜택</strong>으로 보험료를 할인해 주는 업체도 많습니다.</dd>
+                <dt tabindex="0" aria-expanded="false"><strong>저렴한곳</strong>을 찾는 팁이 있나요?</dt>
+                <dd><strong>평균</strong>적인 <strong>가격</strong>은 시즌에 따라 변동되므로, 비수기를 이용하거나 주말이 아닌 평일에 예약하는 것이 <strong>저렴한곳</strong>을 찾을 수 있는 방법입니다. 또한, <strong>네이버</strong>, <strong>구글</strong> 검색을 통해 <strong>할인 이벤트</strong>, <strong>현금 지원 이벤트</strong>를 진행하는 <strong>전문 업체</strong>를 찾아 <strong>비교</strong>해 보세요. <strong>디시</strong>인사이드 같은 커뮤니티에서 <strong>후기</strong>를 참고할 수도 있습니다.</dd>
+                <dt tabindex="0" aria-expanded="false"><strong>신규 가입</strong> 고객에게 제공되는 <strong>혜택</strong>은 무엇인가요?</dt>
+                <dd><strong>전문 업체</strong>마다 다르지만, <strong>신규 가입</strong> 시 첫 대여 <strong>할인</strong>, <strong>상품권</strong> 제공, <strong>현금 지원</strong> 등이 대표적인 <strong>혜택</strong>입니다. <strong>가입</strong> 시 프로모션 코드를 입력하거나 <strong>이벤트</strong> 참여를 통해 받을 수 있습니다.</dd>
+                <dt tabindex="0" aria-expanded="false">렌트카 대여 시 운전 경력과 나이 조건이 있나요?</dt>
+                <dd><strong>전문 업체</strong>마다 <strong>차이점</strong>이 있지만, 대부분 만 21세 이상, 운전 경력 1년 이상을 요구합니다. 수입차나 고급차의 경우 조건이 더 까다로울 수 있습니다. [external-link-5]</dd>
+            </dl>
+        </section>
+
+        <section id="reservation">
+            <h2>실시간 렌트카 견적 문의 및 예약</h2>
+            <p>고객님의 필요에 맞는 정확한 <strong>자동차 렌트카 견적</strong>을 받아보세요. 아래 양식을 작성해 주시면 <strong>전문 업체</strong> 담당자가 신속하게 연락드리겠습니다. <strong>평균</strong> <strong>가격</strong>보다 <strong>저렴한</strong> 맞춤형 <strong>견적</strong>을 받아보시고, <strong>신규 가입 혜택</strong>도 놓치지 마세요. <strong>예상 비용</strong>을 미리 확인하여 합리적인 선택을 할 수 있습니다.</p>
+
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="car-type">희망 차종 분류 (예상)</label>
+                    <select id="car-type" name="car-type" required>
+                        <option value="">차종을 선택해 주세요.</option>
+                        <option value="compact">경형/소형차</option>
+                        <option value="midsize">중형차/세단</option>
+                        <option value="suv">SUV/RV</option>
+                        <option value="luxury">고급차/수입차</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rental-period">대여 기간 (단기/장기)</label>
+                    <select id="rental-period" name="rental-period" required>
+                        <option value="">대여 기간을 선택해 주세요.</option>
+                        <option value="short">단기 (1일~30일)</option>
+                        <option value="long">장기 (1개월 이상)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start-date">희망 대여 시작일</label>
+                    <input type="date" id="start-date" name="start-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="name" placeholder="성함을 입력해 주세요." required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">연락처</label>
+                    <input type="tel" id="contact" name="contact" placeholder="전화번호를 입력해 주세요." required>
+                </div>
+                <div class="form-group">
+                    <label for="comments">추가 요청 사항</label>
+                    <textarea id="comments" name="comments" rows="4" placeholder="특정 모델 희망, 자차 보험 여부 등 추가 요청 사항을 알려주세요."></textarea>
+                </div>
+                <button type="submit" class="cta-button">무료 견적 요청하기</button>
+            </form>
+            <p style="text-align: center; margin-top: 2rem;">빠른 전화 상담: 010-1234-5678</p>
+        </section>
     </main>
-  </body>
-</html>
+
+    <!-- JavaScript for FAQ accordion -->
+    <script>
+        document.querySelectorAll('dl dt').forEach((dt) => {
+            dt.addEventListener('click', () => {
+                const isActive = dt.classList.contains('active');
+                dt.classList.toggle('active');
+                dt.setAttribute('aria-expanded', !isActive);
+            });
+            dt.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    dt.click();
+                }
+            });
+        });
+    </script>
+  
